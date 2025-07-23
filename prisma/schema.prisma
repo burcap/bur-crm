@@ -1,0 +1,138 @@
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified DateTime?
+  passwordHash  String?  // null until the user sets a password
+  name          String?
+  role          Role     @default(USER)
+  image         String?
+
+  accounts      Account[]
+  sessions      Session[]
+  // your app relations … e.g. campaigns, contacts
+  campaigns     Campaign[] @relation("OwnerCampaigns")
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// --- Optional: enum for roles
+enum Role {
+  USER
+  ADMIN
+}
+
+model Contact {
+  id          String   @id @default(cuid())
+  businessName String?
+  contactName  String
+  phone        String?
+  email        String   @unique
+  address      String?
+  city         String?
+  state        String?
+  zip          String?
+  country      String?
+  createdAt    DateTime @default(now())
+  logs         EmailLog[] @relation("ContactLogs") 
+  contactGroups ContactGroup[] 
+}
+
+model Campaign {
+  id            String   @id @default(cuid())
+  name          String
+  subject       String
+  fromEmail     String
+  htmlBody      String?
+  owner         User     @relation("OwnerCampaigns", fields: [ownerId], references: [id])
+  ownerId       String
+  status        String   @default("DRAFT")
+  followUpDays  Int      @default(3)
+  createdAt     DateTime @default(now())
+  logs          EmailLog[]  @relation("CampaignLogs")
+  campaignGroups  CampaignGroup[]
+}
+
+model EmailLog {
+  id          String   @id @default(cuid())
+  campaignId  String
+  contactId   String
+  stepIndex   Int
+  sentAt      DateTime
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  contact     Contact   @relation("ContactLogs",  fields: [contactId],  references: [id])
+  campaign    Campaign  @relation("CampaignLogs", fields: [campaignId], references: [id])
+  @@index([contactId, campaignId])
+}
+
+model Group {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  createdAt DateTime       @default(now())
+  members   ContactGroup[]
+  campaigns CampaignGroup[]
+}
+
+model ContactGroup {
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   String
+
+  @@id([contactId, groupId])
+}
+
+model CampaignGroup {
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId String
+  group      Group    @relation(fields: [groupId], references: [id])
+  groupId    String
+
+  @@id([campaignId, groupId])
+}

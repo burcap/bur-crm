@@ -1,0 +1,10 @@
+{
+  "cron": {
+    "jobs": [
+      {
+        "path": "/app/jobs/send-drip.ts",
+        "schedule": "0 3 * * *"
+      }
+    ]
+  }
+}

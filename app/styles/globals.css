@@ -1,0 +1,8 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn { @apply bg-gray-200 rounded px-3 py-1 text-sm; }
+.btn-primary { @apply bg-blue-600 text-white rounded px-4 py-2 text-sm hover:bg-blue-700; }
+.input { @apply border px-3 py-2 rounded w-full; }
