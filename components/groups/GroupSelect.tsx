@@ -22,7 +22,7 @@ export default function GroupSelect({
   const current = groups.find((g) => g.id === value);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover modal={false} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-full justify-between">
           {current ? current.name : "Select group"}
@@ -34,11 +34,12 @@ export default function GroupSelect({
             <CommandGroup>
               {groups.map((g) => (
                 <CommandItem
-                  key={g.id}
-                  onSelect={() => {
-                    onChange(g.id);
+                key={g.id}
+                value={g.id}
+                onSelect={(val) => {
+                    onChange(val);
                     setOpen(false);
-                  }}
+                }}
                 >
                   <Check className={cn("mr-2 h-4 w-4", value === g.id ? "opacity-100" : "opacity-0")} />
                   {g.name}

@@ -2,7 +2,10 @@ import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cn } from "@/lib/utils";
 
-export const Popover = PopoverPrimitive.Root;
+export const Popover = (props: PopoverPrimitive.PopoverProps) => (
+  <PopoverPrimitive.Root modal={false} {...props} />   // 👈 key change
+);
+
 export const PopoverTrigger = PopoverPrimitive.Trigger;
 export const PopoverClose = PopoverPrimitive.Close;
 
@@ -15,8 +18,10 @@ export const PopoverContent = React.forwardRef<
       ref={ref}
       align={align}
       sideOffset={sideOffset}
+      onOpenAutoFocus={(e) => e.preventDefault()}       // avoid focus trap steal
+      onCloseAutoFocus={(e) => e.preventDefault()}
       className={cn(
-        "z-50 w-72 rounded-md border bg-popover p-2 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "z-[1000] pointer-events-auto w-72 rounded-md border bg-popover p-2 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
         className
       )}
       {...props}

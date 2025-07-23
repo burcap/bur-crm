@@ -11,6 +11,7 @@ type Props = {
   contactIds: string[];
   groups: { id: string; name: string }[];
   onDone?: () => void;
+  onSuccess?: (group: { id: string; name: string }, contactIds: string[]) => void; 
 };
 
 export default function AddToGroupDialog({ open, onOpenChange, contactIds, groups, onDone }: Props) {
@@ -27,6 +28,8 @@ export default function AddToGroupDialog({ open, onOpenChange, contactIds, group
     });
     setSaving(false);
     if (res.ok) {
+      const g = groups.find((x) => x.id === selectedGroup)!;
+      onSuccess?.(g, contactIds);  
       onOpenChange(false);
       onDone?.();
     } else alert("Failed");

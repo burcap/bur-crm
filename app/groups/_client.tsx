@@ -47,7 +47,11 @@ export default function GroupsClient({ initialGroups }: { initialGroups: Group[]
 
       <Separator />
       <ul className="list-disc ml-6 space-y-1">
-        {groups.map((g) => <li key={g.id}>{g.name}</li>)}
+        {groups.map(g => (
+            <li key={g.id}>
+            <a className="underline" href={`/groups/${g.id}`}>{g.name}</a>
+            </li>
+        ))}
       </ul>
     </div>
   );

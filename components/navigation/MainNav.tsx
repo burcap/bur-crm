@@ -9,6 +9,7 @@ export default async function MainNav() {
         <Link href="/dashboard" className="font-semibold">Dashboard</Link>
         <Link href="/contacts">Contacts</Link>
         <Link href="/campaigns">Campaigns</Link>
+        <Link href="/groups">Groups</Link>
         {!!session && (
           <form action="/api/auth/signout" method="post" className="ml-auto">
             <button className="text-sm underline">Sign out</button>

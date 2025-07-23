@@ -38,7 +38,7 @@ export default function GroupMultiSelect({
         })}
       </div>
 
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover modal={false} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4" /> Add Groups</Button>
         </PopoverTrigger>
@@ -47,13 +47,17 @@ export default function GroupMultiSelect({
             <CommandList>
               <CommandGroup>
                 {groups.map((g) => (
-                  <CommandItem
-                    key={g.id}
-                    onSelect={() => toggle(g.id)}
-                  >
-                    <Check className={cn("mr-2 h-4 w-4", value.includes(g.id) ? "opacity-100" : "opacity-0")} />
-                    {g.name}
-                  </CommandItem>
+             <CommandItem
+                key={g.id}
+                value={g.id}
+                onSelect={(val) => {
+                    toggle(val);          // val === g.id
+                    // setOpen(false)  // keep open or close as you wish
+                }}
+                >
+                <Check className={cn("mr-2 h-4 w-4", value.includes(g.id) ? "opacity-100" : "opacity-0")} />
+                {g.name}
+                </CommandItem>
                 ))}
               </CommandGroup>
             </CommandList>

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import AddToGroupDialog from "@/components/groups/AddToGroupDialog";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 type Contact = {
   id: string;
@@ -14,18 +16,48 @@ type Contact = {
   phone: string | null;
   city: string | null;
   state: string | null;
+  groupList: { id: string; name: string }[];
 };
+
 type Group = { id: string; name: string };
 
+
+
 export default function ContactsClient({ initialContacts, allGroups }: { initialContacts: Contact[]; allGroups: Group[] }) {
+  const [contacts, setContacts] = useState<Contact[]>(initialContacts); 
   const [selected, setSelected] = useState<string[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  
 
   const toggle = (id: string) =>
     setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
-  const toggleAll = () =>
-    setSelected((s) => (s.length === initialContacts.length ? [] : initialContacts.map((c) => c.id)));
+    const toggleAll = () =>
+    setSelected(s => (s.length === contacts.length ? [] : contacts.map(c => c.id)));
+
+
+  async function removeFromGroup(contactId: string, groupId: string) {
+  // optimistic UI
+  setContacts(cs =>
+    cs.map(c =>
+      c.id === contactId
+        ? { ...c, groupList: c.groupList.filter(g => g.id !== groupId) }
+        : c
+    )
+  );
+
+  const res = await fetch(`/api/groups/${groupId}/contacts`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contactId }),
+  });
+
+  if (!res.ok) {
+    // revert on failure
+    setContacts(initialContacts);
+    alert("Failed to remove from group");
+  }
+}
 
   return (
     <div className="space-y-6">
@@ -57,10 +89,11 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
             <TableHead>Phone</TableHead>
             <TableHead>City</TableHead>
             <TableHead>State</TableHead>
+            <TableHead>Groups</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {initialContacts.map((c) => (
+          {contacts.map((c) => (
             <TableRow key={c.id}>
               <TableCell>
                 <Checkbox
@@ -74,6 +107,24 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
               <TableCell>{c.phone}</TableCell>
               <TableCell>{c.city}</TableCell>
               <TableCell>{c.state}</TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-1">
+                    {c.groupList.map(g => (
+                    <Badge
+                        key={g.id}
+                        variant="secondary"
+                        className="flex items-center gap-1 cursor-pointer"
+                        onClick={e => {
+                        e.stopPropagation();
+                        removeFromGroup(c.id, g.id);
+                        }}
+                    >
+                        {g.name}
+                        <X className="h-3 w-3" />
+                    </Badge>
+                    ))}
+                </div>
+                </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -85,6 +136,21 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
         contactIds={selected}
         groups={allGroups}
         onDone={() => setSelected([])}
+         onSuccess={(group, ids) => {
+        setContacts((cs) =>
+        cs.map((c) =>
+            ids.includes(c.id)
+            ? {
+                ...c,
+                // add if not already there
+                groupList: c.groupList.some((g) => g.id === group.id)
+                    ? c.groupList
+                    : [...c.groupList, group],
+                }
+            : c
+        )
+        );
+    }}
       />
     </div>
   );
