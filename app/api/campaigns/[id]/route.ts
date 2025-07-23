@@ -6,6 +6,7 @@ import { auth } from '@/lib/auth';
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   const campaign = await prisma.campaign.findUnique({
     where: { id: params.id },
+    include: { groups: true },      
     select: { id: true, name: true, subject: true, fromEmail: true, htmlBody: true, status: true },
   });
   if (!campaign) return NextResponse.json({ error: 'Not found' }, { status: 404 });

@@ -80,7 +80,7 @@ model Contact {
   country      String?
   createdAt    DateTime @default(now())
   logs         EmailLog[] @relation("ContactLogs") 
-  contactGroups ContactGroup[] 
+  groups       ContactGroup[]
 }
 
 model Campaign {
@@ -95,7 +95,7 @@ model Campaign {
   followUpDays  Int      @default(3)
   createdAt     DateTime @default(now())
   logs          EmailLog[]  @relation("CampaignLogs")
-  campaignGroups  CampaignGroup[]
+  groups        CampaignGroup[]
 }
 
 model EmailLog {
