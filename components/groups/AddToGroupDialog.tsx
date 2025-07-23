@@ -11,10 +11,17 @@ type Props = {
   contactIds: string[];
   groups: { id: string; name: string }[];
   onDone?: () => void;
-  onSuccess?: (group: { id: string; name: string }, contactIds: string[]) => void; 
+  onSuccess?: (group: { id: string; name: string }, contactIds: string[]) => void; // <- add this
 };
 
-export default function AddToGroupDialog({ open, onOpenChange, contactIds, groups, onDone }: Props) {
+export default function AddToGroupDialog({
+  open,
+  onOpenChange,
+  contactIds,
+  groups,
+  onDone,
+  onSuccess, // <- destructure it
+}: Props) {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -29,10 +36,12 @@ export default function AddToGroupDialog({ open, onOpenChange, contactIds, group
     setSaving(false);
     if (res.ok) {
       const g = groups.find((x) => x.id === selectedGroup)!;
-      onSuccess?.(g, contactIds);  
+      onSuccess?.(g, contactIds);          // <- safe call
       onOpenChange(false);
       onDone?.();
-    } else alert("Failed");
+    } else {
+      alert("Failed");
+    }
   }
 
   return (
@@ -41,11 +50,13 @@ export default function AddToGroupDialog({ open, onOpenChange, contactIds, group
         <DialogHeader>
           <DialogTitle>Add {contactIds.length} contact(s) to a group</DialogTitle>
         </DialogHeader>
+
         <GroupSelect
           groups={groups}
           value={selectedGroup}
           onChange={setSelectedGroup}
         />
+
         <Button className="mt-4" disabled={!selectedGroup || saving} onClick={save}>
           {saving ? "Saving…" : "Save"}
         </Button>

@@ -3,11 +3,14 @@ import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
-  const camp = await prisma.campaign.findUnique({ where: { id: params.id }});
+type Props = { params: Promise<{ id: string }> };
+
+export async function POST(req: Request, { params }: Props) {
+   const { id } = await params;    
+  const camp = await prisma.campaign.findUnique({ where: { id }});
   if (!camp) return NextResponse.json({error:'Not found'},{status:404});
   const groupIds = await prisma.campaignGroup.findMany({
-  where: { campaignId: campaign.id },
+  where: { campaignId: id },
   select: { groupId: true }
 });
 const contacts = groupIds.length

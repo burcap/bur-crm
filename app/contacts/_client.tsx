@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import AddToGroupDialog from "@/components/groups/AddToGroupDialog";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import AddContactDialog from "@/components/contacts/AddContactDialog";
 
 type Contact = {
   id: string;
@@ -70,6 +71,14 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
           <Button disabled={!selected.length} onClick={() => setDialogOpen(true)}>
             Add to Group
           </Button>
+           <AddContactDialog
+            onCreated={(c) =>
+              setContacts((cs) => [
+                { ...c, groupList: [] }, // ensure groupList exists
+                ...cs,
+              ])
+            }
+          />
           <Button><a href="/contacts/import">Import CSV</a></Button>
         </div>
       </div>

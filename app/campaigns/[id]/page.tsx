@@ -7,11 +7,12 @@ import {
 import Link from "next/link";
 import { revalidatePath } from "next/cache"; // optional if you add server actions
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
 export default async function CampaignDetailPage({ params }: Props) {
+  const { id } = await params;     
   const campaign = await prisma.campaign.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       logs: {
         include: { contact: true },
