@@ -3,7 +3,7 @@ import MainNav from '@/components/navigation/MainNav';
 import { ReactNode } from 'react';
 
 export const metadata = {
-  title: 'Mailchimp‑Lite',
+  title: 'Bur CRM',
   description: 'Next.js Email Marketing Tool'
 };
 

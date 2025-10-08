@@ -7,6 +7,7 @@ import {
 import Link from "next/link";
 import { revalidatePath } from "next/cache"; // optional if you add server actions
 
+
 type Props = { params: Promise<{ id: string }> };
 
 export default async function CampaignDetailPage({ params }: Props) {
@@ -63,9 +64,9 @@ export default async function CampaignDetailPage({ params }: Props) {
         <CardContent className="prose max-w-none">
           <h3 className="font-semibold mb-2">Subject: {campaign.subject}</h3>
           <div
-            className="border rounded p-4 bg-white"
-            dangerouslySetInnerHTML={{ __html: campaign.htmlBody ?? "" }}
-          />
+            className="prose prose-sm max-w-none dark:prose-invert"
+            dangerouslySetInnerHTML={{ __html: campaign.htmlBody || "" }}
+            />
         </CardContent>
       </Card>
 
@@ -95,6 +96,27 @@ export default async function CampaignDetailPage({ params }: Props) {
               ))}
             </TableBody>
           </Table>
+        </CardContent>
+      </Card>
+    {/* Dates */}
+      <Card>
+        <CardHeader>
+          <CardTitle>More Info</CardTitle>
+        </CardHeader>
+        <CardContent className="prose max-w-none">
+          <p className="text-sm text-muted-foreground">
+            Created: {new Date(campaign.createdAt).toLocaleString()}
+            </p>
+            {campaign.startedAt && (
+            <p className="text-sm text-muted-foreground">
+                Started: {new Date(campaign.startedAt).toLocaleString()}
+            </p>
+            )}
+            {campaign.completedAt && (
+            <p className="text-sm text-muted-foreground">
+                Completed: {new Date(campaign.completedAt).toLocaleString()}
+            </p>
+            )}
         </CardContent>
       </Card>
     </div>

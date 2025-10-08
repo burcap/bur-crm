@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from "@/components/ui/badge";
 
 export default async function CampaignsPage() {
   const campaigns = await prisma.campaign.findMany({ orderBy: { createdAt: 'desc' } });
@@ -24,9 +25,18 @@ export default async function CampaignsPage() {
         <TableBody>
           {campaigns.map(c => (
             <TableRow key={c.id}>
-              <TableCell><Link href={`/campaigns/${c.id}`}>{c.name}</Link></TableCell>
+              <TableCell><Link className='underline font-semibold' href={`/campaigns/${c.id}`}>{c.name}</Link></TableCell>
               <TableCell>{c.subject}</TableCell>
-              <TableCell>{c.status}</TableCell>
+              <TableCell>
+                <Badge variant={
+                  c.status === "COMPLETED" ? "default"
+                  : c.status === "STARTED" ? "secondary"
+                  : c.status === "FAILED" ? "destructive"
+                  : "outline"
+                }>
+                  {c.status}
+                </Badge>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

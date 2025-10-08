@@ -13,5 +13,5 @@ export default auth(async (req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/contacts/:path*", "/campaigns/:path*"],
+  matcher: ["/dashboard/:path*", "/contacts/:path*", "/campaigns/:path*", "/groups/:path*"],
 };

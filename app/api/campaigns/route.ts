@@ -8,13 +8,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { name, subject = "", fromEmail = "no-reply@example.com" } = await req.json();
+  const { name, subject, fromEmail, htmlBody } = await req.json();
 
   const campaign = await prisma.campaign.create({
     data: {
       name,
       subject,
       fromEmail,
+      htmlBody,
       ownerId: session.user.id, // ← required
     },
     select: { id: true },

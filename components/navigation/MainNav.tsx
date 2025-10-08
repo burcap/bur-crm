@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { auth } from '@/lib/auth';
+import { auth, signOut } from '@/lib/auth';
 
 export default async function MainNav() {
   const session = await auth();
@@ -11,8 +11,13 @@ export default async function MainNav() {
         <Link href="/campaigns">Campaigns</Link>
         <Link href="/groups">Groups</Link>
         {!!session && (
-          <form action="/api/auth/signout" method="post" className="ml-auto">
-            <button className="text-sm underline">Sign out</button>
+          <form className="ml-auto"
+            action={async () => {
+              "use server"
+              await signOut()
+            }}
+          >
+            <button className="text-sm underline" type="submit">Sign Out</button>
           </form>
         )}
       </div>

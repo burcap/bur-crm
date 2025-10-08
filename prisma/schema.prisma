@@ -61,7 +61,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// --- Optional: enum for roles
 enum Role {
   USER
   ADMIN
@@ -96,6 +95,8 @@ model Campaign {
   createdAt     DateTime @default(now())
   logs          EmailLog[]  @relation("CampaignLogs")
   groups        CampaignGroup[]
+  startedAt    DateTime?
+  completedAt  DateTime?
 }
 
 model EmailLog {
