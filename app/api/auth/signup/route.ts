@@ -10,6 +10,9 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
+  if (process.env.ALLOW_SIGNUP !== "true") {
+    return NextResponse.json({ error: "Signups are disabled" }, { status: 403 });
+  }
   try {
     const body = await req.json();
     const { email, password, name } = schema.parse(body);

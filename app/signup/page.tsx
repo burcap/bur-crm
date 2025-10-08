@@ -6,6 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export default function SignupPage() {
+    if (process.env.ALLOW_SIGNUP !== "true") {
+    return (
+      <div className="p-6 text-sm text-muted-foreground">
+        Public signups are disabled. Contact your administrator.
+      </div>
+    );
+  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
