@@ -83,10 +83,11 @@ export async function POST(_req: Request, ctx: Ctx) {
       // 1) Create log first to get stable id for tracking URLs
       const log = await prisma.emailLog.create({
         data: {
-          campaignId: id,
-          contactId: contact.id,
+          campaign: { connect: { id } },          // 👈
+          contact:  { connect: { id: contact.id } }, // 👈
           stepIndex: 0,
-        },
+          sentAt: new Date(),
+          },
         select: { id: true },
       });
 
