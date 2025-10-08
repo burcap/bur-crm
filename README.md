@@ -1,5 +1,6 @@
 # Bur Financial CRM
 
+## Run Dev
 pnpm dev
 
 ## Create user
