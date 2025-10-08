@@ -1,5 +1,5 @@
 {
-  "cron": {
+  "crons": {
     "jobs": [
       {
         "path": "/app/jobs/send-drip.ts",
