@@ -1,10 +1,9 @@
-// next-auth.d.ts
 import { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
   interface User extends DefaultUser {
-    role?: "USER" | "ADMIN";
     id: string;
+    role?: "USER" | "ADMIN";
     passwordHash?: string | null;
   }
 
@@ -22,3 +21,6 @@ declare module "next-auth/jwt" {
     role?: "USER" | "ADMIN";
   }
 }
+
+// ensure this file is treated as a module and doesn't pollute globals
+export {};

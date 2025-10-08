@@ -5,6 +5,16 @@ import { render } from "@react-email/render";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+
 export async function POST(_req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
 
@@ -53,9 +63,11 @@ export async function POST(_req: Request, ctx: Ctx) {
 
   const results = await Promise.allSettled(
     contacts.map(async (contact) => {
-      const html =
-        campaign.htmlBody ??
-        render(`<p>Hello ${contact.contactName || ""},</p>`);
+    const html =
+      campaign.htmlBody && campaign.htmlBody.trim().length > 0
+        ? campaign.htmlBody
+        : `<p>Hello ${contact.contactName ? escapeHtml(contact.contactName) : ""},</p>`; // simple fallback
+
 
       const { data, error } = await resend.emails.send({
         from: campaign.fromEmail,
