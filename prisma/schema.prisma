@@ -107,6 +107,7 @@ model EmailLog {
   sentAt      DateTime
   openedAt    DateTime?
   clickedAt   DateTime?
+  providerMessageId String?
   contact     Contact   @relation("ContactLogs",  fields: [contactId],  references: [id])
   campaign    Campaign  @relation("CampaignLogs", fields: [campaignId], references: [id])
   @@index([contactId, campaignId])

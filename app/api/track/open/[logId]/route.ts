@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+export const runtime = "nodejs";
 
 type Ctx = { params: Promise<{ logId: string }> };
 

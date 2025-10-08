@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-
+export const runtime = "nodejs";
 type Ctx = { params: Promise<{ logId: string }> };
 
 export async function GET(req: Request, ctx: Ctx) {
