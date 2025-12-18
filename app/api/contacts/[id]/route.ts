@@ -7,8 +7,9 @@ const sanitize = (value: any) => {
   return value === "" ? null : value;
 };
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const body = await req.json();
+  const { id } = await params;
 
   const data: Record<string, any> = {};
   [
@@ -32,7 +33,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   try {
     const contact = await prisma.contact.update({
-      where: { id: params.id },
+      where: { id },
       data,
     });
     return NextResponse.json(contact);
