@@ -8,6 +8,7 @@ import AddToGroupDialog from "@/components/groups/AddToGroupDialog";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import AddContactDialog from "@/components/contacts/AddContactDialog";
+import EditContactDialog from "@/components/contacts/EditContactDialog";
 
 type Contact = {
   id: string;
@@ -15,8 +16,11 @@ type Contact = {
   contactName: string;
   email: string;
   phone: string | null;
+  address: string | null;
   city: string | null;
   state: string | null;
+  zip: string | null;
+  country: string | null;
   groupList: { id: string; name: string }[];
 };
 
@@ -66,7 +70,7 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
         <h1 className="text-2xl font-bold">Contacts</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={toggleAll}>
-            {selected.length === initialContacts.length ? "Unselect all" : "Select all"}
+            {selected.length === contacts.length ? "Unselect all" : "Select all"}
           </Button>
           <Button disabled={!selected.length} onClick={() => setDialogOpen(true)}>
             Add to Group
@@ -88,7 +92,7 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
           <TableRow>
             <TableHead>
               <Checkbox
-                checked={selected.length === initialContacts.length && selected.length > 0}
+                checked={selected.length === contacts.length && selected.length > 0}
                 onCheckedChange={toggleAll}
               />
             </TableHead>
@@ -99,6 +103,7 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
             <TableHead>City</TableHead>
             <TableHead>State</TableHead>
             <TableHead>Groups</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -134,6 +139,18 @@ export default function ContactsClient({ initialContacts, allGroups }: { initial
                     ))}
                 </div>
                 </TableCell>
+              <TableCell>
+                <EditContactDialog
+                  contact={c}
+                  onUpdated={(updated) =>
+                    setContacts((cs) =>
+                      cs.map((item) =>
+                        item.id === updated.id ? { ...item, ...updated, groupList: item.groupList } : item
+                      )
+                    )
+                  }
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

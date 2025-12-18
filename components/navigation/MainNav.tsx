@@ -1,6 +1,8 @@
 ﻿import Link from 'next/link';
 import { auth, signOut } from '@/lib/auth';
 
+export const dynamic = "force-dynamic"; // ensure session-driven navbar is rendered per request
+
 export default async function MainNav() {
   const session = await auth();
   const prefetch = !!session;

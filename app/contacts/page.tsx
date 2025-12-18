@@ -10,8 +10,11 @@ export default async function ContactsPage() {
       contactName: true,
       email: true,
       phone: true,
+      address: true,
       city: true,
       state: true,
+      zip: true,
+      country: true,
       groups: { select: { group: { select: { id: true, name: true } } } },
     },
   });
