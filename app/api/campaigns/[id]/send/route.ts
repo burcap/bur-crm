@@ -50,6 +50,11 @@ export async function POST(_req: Request, ctx: Ctx) {
     return NextResponse.json({ ok: false, error: "Campaign not found" }, { status: 404 });
   }
 
+  // Require at least one group; otherwise skip to avoid blasting everyone
+  if (!campaign.groups.length) {
+    return NextResponse.json({ ok: false, error: "Campaign has no groups attached" }, { status: 400 });
+  }
+
   // Mark as STARTED
   await prisma.campaign.update({
     where: { id },
@@ -57,13 +62,11 @@ export async function POST(_req: Request, ctx: Ctx) {
   });
 
   // Resolve recipients
-  const contacts = campaign.groups.length
-    ? await prisma.contact.findMany({
-        where: {
-          groups: { some: { groupId: { in: campaign.groups.map((g) => g.groupId) } } },
-        },
-      })
-    : await prisma.contact.findMany();
+  const contacts = await prisma.contact.findMany({
+    where: {
+      groups: { some: { groupId: { in: campaign.groups.map((g) => g.groupId) } } },
+    },
+  });
 
   if (!contacts.length) {
     return NextResponse.json({
