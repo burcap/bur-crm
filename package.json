@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "prisma:deploy": "prisma migrate deploy",
     "user:create": "node scripts/create-user.mjs",
-    "user:list": "node scripts/list-users.mjs" 
+    "user:list": "node scripts/list-users.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -36,7 +36,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "lucide-react": "^0.525.0",
-    "next": "15.3.1",
+    "next": "15.3.8",
     "next-auth": "5.0.0-beta.29",
     "papaparse": "^5.4.1",
     "prisma": "^5.0.0",
