@@ -3,6 +3,11 @@ import { auth, signOut } from '@/lib/auth';
 
 export const dynamic = "force-dynamic"; // ensure session-driven navbar is rendered per request
 
+const signOutAction = async () => {
+  "use server";
+  await signOut({ redirectTo: "/login" });
+};
+
 export default async function MainNav() {
   const session = await auth();
   const prefetch = !!session;
@@ -15,12 +20,7 @@ export default async function MainNav() {
         <Link href="/campaigns" prefetch={prefetch}>Campaigns</Link>
         <Link href="/groups" prefetch={prefetch}>Groups</Link>
         {!!session && (
-          <form className="ml-auto"
-            action={async () => {
-              "use server"
-              await signOut()
-            }}
-          >
+          <form className="ml-auto" action={signOutAction}>
             <button className="text-sm underline" type="submit">Sign Out</button>
           </form>
         )}
