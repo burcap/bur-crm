@@ -50,7 +50,7 @@ export default function NewCampaignPage() {
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">Internal Name</Label>
           <Input
             id="name"
             value={form.name}
@@ -59,7 +59,7 @@ export default function NewCampaignPage() {
         </div>
 
         <div>
-          <Label htmlFor="subject">Subject</Label>
+          <Label htmlFor="subject">Email Subject</Label>
           <Input
             id="subject"
             value={form.subject}

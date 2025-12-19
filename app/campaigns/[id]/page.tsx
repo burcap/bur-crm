@@ -5,7 +5,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import { revalidatePath } from "next/cache"; // optional if you add server actions
+import SendCampaignButton from "./SendCampaignButton";
 
 
 type Props = { params: Promise<{ id: string }> };
@@ -41,10 +41,7 @@ export default async function CampaignDetailPage({ params }: Props) {
           <Link href={`/campaigns/${campaign.id}/edit`}>
             <Button variant="outline">Edit</Button>
           </Link>
-          {/* Simple POST form to trigger send */}
-          <form action={`/api/campaigns/${campaign.id}/send`} method="post">
-            <Button type="submit">Send Now</Button>
-          </form>
+          <SendCampaignButton id={campaign.id} />
         </div>
       </div>
 
