@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "prisma:deploy": "prisma migrate deploy",
     "user:create": "node scripts/create-user.mjs",
-    "user:list": "node scripts/list-users.mjs" 
+    "user:list": "node scripts/list-users.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
